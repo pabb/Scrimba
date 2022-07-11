@@ -1,3 +1,12 @@
+# TODO
+
+- Tie the width of the card to the width of the photo
+- Add icons to the Email/LI buttons
+- Add icons to the footer
+- Add the dark blue background around the main card, add back the rounded edges to the card
+- Update content in About & Interests to actually reflect me
+- Copy project to my local files & put on GitHub
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
