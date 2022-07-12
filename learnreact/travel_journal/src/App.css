@@ -2,6 +2,11 @@
   box-sizing: border-box;
 }
 
+/*
+  For the intended viewing experience (mobile screen width), add:
+    max-width: 550px; 
+*/
+
 body {
   font-family: Inter;
 }
