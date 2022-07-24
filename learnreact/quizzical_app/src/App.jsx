@@ -1,22 +1,31 @@
 import React from 'react';
 import Quiz from './components/Quiz';
 import Title from './components/Title';
+import types from './types.jsx';
 import './App.css';
 
 function App() {
-  const [quizStarted, setQuizStarted] = React.useState(false);
+    const [quizStarted, setQuizStarted] = React.useState(false);
 
-  function startQuiz(start) {
-    setQuizStarted(start);
-  }
+    function startQuiz(start) {
+        setQuizStarted(start);
+    }
 
-  return (
-    <div className="App">
-      <main>
-        {quizStarted ? <Quiz /> : <Title handleStart={startQuiz} />}
-      </main>
-    </div>
-  )
+    return (
+        <div className="App">
+            <main>
+                {
+                    quizStarted ? 
+                        <Quiz 
+                            questionCount={types.QUESTION_COUNT} 
+                            questionType={types.QUESTION_TYPE_MC} 
+                            apiUrl={types.API_URL}
+                        /> : 
+                        <Title handleStart={startQuiz} />
+                }
+            </main>
+        </div>
+    )
 }
 
 export default App
