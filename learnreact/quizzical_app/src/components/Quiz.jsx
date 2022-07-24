@@ -1,9 +1,8 @@
 import React from "react";
-// import Question from "./Question";
 import { nanoid } from "nanoid";
+import { decode } from "he";
 import types from '../types.jsx';
 
-// TODO: dynamically create the answer elements based on the question type
 // TODO: if question count is > 5, paginate and generate a "Next page" button
 //          but then figure out how to do "checkAnswers" (because they won't all be on one page)
 //          maybe just generate a new component to show the user which ones they missed
@@ -21,27 +20,26 @@ export default function Quiz(props) {
                 throw "ERROR: Unable to fetch questions from OTDB API";
             }
 
-            console.log("Data: " + data);
+            console.log(data.results);
             setQuestions(data.results);
         }
-        getQuestions()
+        getQuestions();
     }, [])
 
     function generateAnswers(question) {
-        const answers = question.incorrect_answers.slice();
-        answers.concat(question.correct_answer);
+        let answers = question.incorrect_answers.slice();
+        answers.push(question.correct_answer);
         answers.sort();
-        console.log("Answers: " + answers);
 
+        // Save correct answer index
         let answerElems = []
         if (question.type === types.QUESTION_TYPE_MC) {
             answerElems = answers.map(answer => {
                 return <button key={nanoid()} className="answer--button">{answer}</button>
             })
         } else if (question.type === types.QUESTION_TYPE_TF) {
-            answerElems = answers.map(answer => {
-                return <button key={nanoid()} className="answer--button">{answer}</button>
-            })
+            answerElems.push(<button key={nanoid()} className="answer--button">{types.ANSWER_TRUE}</button>)
+            answerElems.push(<button key={nanoid()} className="answer--button">{types.ANSWER_FALSE}</button>)
         } else {
             throw "ERROR: Invalid question type provided";
         }
@@ -54,10 +52,9 @@ export default function Quiz(props) {
     }
 
     function generateQuestions(count) {
-        // TODO: randomly assign correct answer position
         const questionElems = questions.map(question => (
             <div className="question" key={nanoid()}>
-                <h3 className="question--title">{question.question}</h3>
+                <h3 className="question--text">{decode(question.question)}</h3>
                 {generateAnswers(question)}
                 <br/>
             </div>

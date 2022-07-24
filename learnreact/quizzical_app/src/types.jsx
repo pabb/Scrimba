@@ -12,6 +12,9 @@ const types = {
     QUESTION_TYPE_MC: "multiple",
     QUESTION_TYPE_ALL: "",
 
+    ANSWER_TRUE: "True",
+    ANSWER_FALSE: "False",
+
     // API format
     // e.g. https://opentdb.com/api.php?amount=5&category=15&difficulty=easy&type=multiple
     API_BASE: "https://opentdb.com/api.php?",
