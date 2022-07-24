@@ -1,0 +1,52 @@
+/* #root {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 2rem;
+  text-align: center;
+}
+ */
+
+body {
+  background-color: #FFFFFF;
+  font-family: Inter;
+}
+
+/* Center the elements on the page */
+html {
+  display: flex;
+  flex-flow: row nowrap;  
+  justify-content: center;
+  align-content: center;
+  align-items: center;
+  height: 100%;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+.main {
+  background: #F5F7FB;
+  width: 317px;
+  border-radius: 10px;
+}
+
+.title {
+  color: #293264;
+  font-size: 31.25;
+  font-weight: bold;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.title--button {
+  width: 193px;
+  height: 52px;
+  left: 179px;
+  top: 314px;
+  background-color: #4D5B9E;
+  color: #F5F7FB;
+  font-size: 16px;
+  border-radius: 15px;
+}
