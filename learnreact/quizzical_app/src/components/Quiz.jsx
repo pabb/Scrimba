@@ -1,6 +1,6 @@
 import React from "react";
+import Question from "./Question";
 import { nanoid } from "nanoid";
-import { decode } from "he";
 
 // TODO: if question count is > 5, paginate and generate a "Next page" button
 //          but then figure out how to do "checkAnswers" (because they won't all be on one page)
@@ -10,13 +10,15 @@ export default function Quiz(props) {
     const [questions, setQuestions] = React.useState([
         {
             id: "gjgjgjgjg",
-            correctAnswer: "Yes",
-            correctAnswerId: "abcde",
-            incorrectAnswers: ["No", "Maybe"],
+            answers: ["test", "test"],
+            // correctAnswerId: "abcde",
+            // incorrectAnswers: ["No", "Maybe"],
+            correctAnswerIndex: 0,
             question: "Is this a test?",
             isBoolean: false
         }
     ]);
+
     // Query API for questions on first component load
     React.useEffect(() => {
         async function getQuestions() {
@@ -36,66 +38,38 @@ export default function Quiz(props) {
         const modifiedQuestions = []
         for (let i = 0; i < rawQuestions.length; i++) {
             const currentQuestion = rawQuestions[i]
+            let answersArr = currentQuestion.incorrect_answers.slice()
+            let numAnswers = 1 + currentQuestion.incorrect_answers.length // 1 true answer + 1-3 incorrect answers 
+            let correctIndex = Math.ceil(Math.random() * numAnswers)
+            answersArr.splice(correctIndex, 0, currentQuestion.correct_answer)
+
+            // Splice correct Answer to correctIndex
             modifiedQuestions.push({
                 id: nanoid(),
-                correctAnswer: currentQuestion.correct_answer,
-                correctAnswerId: nanoid(),
-                incorrectAnswers: currentQuestion.incorrect_answers,
+                answers: answersArr,
+                correctAnswerIndex: correctIndex,
                 question: currentQuestion.question,
-                isBoolean: currentQuestion.type === "boolean"
+                isBoolean: currentQuestion.type === "boolean",
             })
         }
 
         setQuestions(modifiedQuestions);
     }
 
-    function generateAnswers(question) {
-        let answers = question.incorrectAnswers.slice();
-        answers.unshift(question.correctAnswer); // Put correct answer at front of array so that we can assign its id as correctAnswerId below
-
-        const answerElems = answers.map((answer, index) => {
-            const answerId = index === 0 ? question.correctAnswerId : nanoid();
-            return <button key={answerId} id={answerId} className="answer--button">{answer}</button>
-        })
-
-        // Shuffle ordering of multiple choice elements so the answer isn't always the first choice
-        if (!question.isBoolean) {
-            // shuffle(answerElems);
-            answerElems.sort(function() {
-                return Math.random() - 0.5;
-            })
-        }
-        // Consider setting buttons for true/false questions in static order (True, False) 
-        // else {
-        //     answerElems.sort(button => button.value)
-        // }
-
-        return (
-            <div className="answers">
-                {answerElems}
-            </div>
-        )
-    }
-
-    function generateQuestions(count) {
-        const questionElems = questions.map(question => (
-            <div className="question" key={question.id}>
-                <h3 className="question--text">{decode(question.question)}</h3>
-                {generateAnswers(question)}
-                <br/>
-            </div>
-        ))
-
-        return questionElems;
-    }
-
     function checkAnswers() {
         
     }
 
+    // TODO: make sure only renders ONCE
+    const questionElems = questions.map(question => (
+        <Question key={question.id} questionBlob={question} correctIndex={question.correctAnswerIndex} />
+    ))
+
     return (
         <div className="quiz">
-            {generateQuestions(props.questionCount)}
+            <div className="questions">
+                {questionElems}
+            </div>
             <button 
                 className="quiz--button" 
                 onClick={checkAnswers}

@@ -17,8 +17,6 @@ function App() {
                 {
                     quizStarted ? 
                         <Quiz 
-                            questionCount={types.QUESTION_COUNT} 
-                            questionType={types.QUESTION_TYPE_MC} 
                             apiUrl={types.API_URL}
                         /> : 
                         <Title handleStart={startQuiz} />
