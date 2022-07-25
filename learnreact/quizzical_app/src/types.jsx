@@ -25,7 +25,48 @@ const types = {
         type: "" // multiple | boolean, or null (All)
     },
 
-    API_URL: "https://opentdb.com/api.php?amount=5&category=15" // type=multiple | boolean
+    API_URL: "https://opentdb.com/api.php?amount=5&category=15", // type=multiple | boolean
+
+    QUESTION_EXAMPLE: [
+        {
+            id: "lfdsjfdssdf",
+            category: "Test1",
+            type: "multiple",
+            difficulty: "hard",
+            question: "What?",
+            correct_answer: "Yes to the yes",
+            incorrect_answers: ["Blank","Blank2","Blank3"],
+        },
+        {
+            id: "jkggdfkhgdf",
+            category: "Test2",
+            type: "boolean",
+            difficulty: "medium",
+            question: "Hello?",
+            correct_answer: "True",
+            incorrect_answers: ["False"],
+        },        
+    ],
+
+    ANSWER_EXAMPLE: [
+        {
+            questionId: "lfdsjfdssdf",
+            answers: [
+                {
+                    value: "bleh",
+                    id: "8543hgjsdgg",
+                    correct: false,
+                    selected: false
+                },
+                {
+                    value: "agghh",
+                    id: "359jksdjk",
+                    correct: true,
+                    selected: false
+                },                
+            ]
+        }
+    ]
 }
 
 export default types;
