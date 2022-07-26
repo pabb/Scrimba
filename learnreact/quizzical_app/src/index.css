@@ -28,8 +28,9 @@ body {
   margin: 0;
   display: flex;
   place-items: center;
-  min-width: 320px;
-  min-height: 100vh;
+  /* min-width: 320px; */
+  min-height: 90vh;
+  font-family: Inter;
 }
 
 h1 {
@@ -49,7 +50,7 @@ button {
   transition: border-color 0.25s;
 }
 button:hover {
-  border-color: #646cff;
+  border-color: #D6DBF5;
 }
 button:focus,
 button:focus-visible {
