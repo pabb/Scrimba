@@ -1,5 +1,6 @@
 import React from "react";
 import Question from "./Question";
+import Confetti from "react-confetti";
 import { nanoid } from "nanoid";
 
 // TODO: if question count is > 5, paginate and generate a "Next page" button
@@ -23,8 +24,14 @@ export default function Quiz(props) {
     // Set to indicate when we're done gathering answer results 
     const [doneChecking, setDoneChecking] = React.useState(false);
 
+    // Set to indicate user won the game
+    const [userWon, setUserWon] = React.useState(false);
+
     // When checkingAnswers is set, represent whether each question was correctly selected
     const [answerCorrect, setAnswerCorrect] = React.useState([false, false, false, false, false]);
+
+    // Used to trigger when questions should be generated; on initial page load and after user clicks "Reset Quiz"
+    const [resetQuestions, setResetQuestions] = React.useState(true);
 
     // Query API for questions on first component load
     React.useEffect(() => {
@@ -38,19 +45,21 @@ export default function Quiz(props) {
             const rawQuestions = data.results;
             assignQuestions(rawQuestions);
         }
-        getQuestions();
-    }, [])
- 
-     // TODO: check when transitioning checkAnswers -> false to reset Quiz. Might require new state variable.
+
+        if (resetQuestions) {
+            getQuestions();
+            setResetQuestions(false);
+        }
+    }, [resetQuestions])
+
+
      // When done checking, report whether the player has won
     React.useEffect(() => {
         if (doneChecking) {
-            console.log("Number correct: " + answerCorrect.filter(x => x === true).length + " / " + answerCorrect.length);
-            console.log("All correct: " + answerCorrect.every(x => x === true));
+            if (answerCorrect.every(x => x === true)) {
+                setUserWon(true);
+            }
         }
-        // if (checkingAnswers && !doneChecking) {
-        //     // reset quiz
-        // }
 
         // Report if each choice was correct; can do Confetti or return the number of correct questions
     }, [doneChecking])
@@ -97,13 +106,17 @@ export default function Quiz(props) {
         setCheckingAnswers(true);
     }
 
+    // Reset quiz by reverting all state variables
     function resetQuiz() {
         setCheckingAnswers(false);
-
-        // Trigger new API call with useEffect, or re-render
+        setDoneChecking(false);
+        setUserWon(false);
+        setAnswerCorrect([false, false, false, false, false]);
+        setResetQuestions(true);
     }
 
-    console.log("setAnswerState: " + answerCorrect);
+    // DEBUG: use this to check the correct answer indices to test win condition
+    // console.log(questions);
 
     const questionElems = questions.map((question, index) => (
         <Question 
@@ -116,8 +129,12 @@ export default function Quiz(props) {
         />
     ))
 
+     // Note: I added the second "userWon &&" line to force a re-render after the useEffect that sets userWon
+     // Otherwise, the Confetti won't render
     return (
         <div className="quiz">
+            {userWon && <Confetti />}
+            {userWon && <h1>You've won!</h1>}
             <div className="questions">
                 {questionElems}
             </div>

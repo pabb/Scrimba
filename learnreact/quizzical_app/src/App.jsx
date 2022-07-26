@@ -16,9 +16,7 @@ function App() {
             <main>
                 {
                     quizStarted ? 
-                        <Quiz 
-                            apiUrl={types.API_URL}
-                        /> : 
+                        <Quiz apiUrl={types.API_URL} /> : 
                         <Title handleStart={startQuiz} />
                 }
             </main>
