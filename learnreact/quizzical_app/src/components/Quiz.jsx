@@ -10,10 +10,10 @@ export default function Quiz(props) {
     
     const [questions, setQuestions] = React.useState([
         {
-            id: "gjgjgjgjg",
-            answers: ["test", "test"],
+            id: "",
+            answers: [],
             correctAnswerIndex: 0,
-            question: "Is this a test?",
+            question: "",
             isBoolean: false
         }
     ]);
@@ -95,7 +95,6 @@ export default function Quiz(props) {
                 }
             }
 
-            console.log("setAnswerState - questionIndex + " + questionIndex + " isCorrect: " + isCorrect);
             return answers;
         })
 
@@ -134,7 +133,7 @@ export default function Quiz(props) {
     return (
         <div className="quiz">
             {userWon && <Confetti />}
-            {userWon && <h1>You've won!</h1>}
+            {<h1>{userWon ? "You've won!" : "Quizzical"}</h1>}
             <div className="questions">
                 {questionElems}
             </div>

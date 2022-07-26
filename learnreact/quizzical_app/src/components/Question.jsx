@@ -12,7 +12,6 @@ export default function Question(props) {
 
     React.useEffect(() => {
         if (props.checkCorrect) {
-            console.log("selectedAnswerIndex: " + selectedAnswerIndex + " / correctIndex: " + props.correctIndex)
             props.setCorrect(props.index, selectedAnswerIndex === props.correctIndex);
         }
     }, [props.checkCorrect])
