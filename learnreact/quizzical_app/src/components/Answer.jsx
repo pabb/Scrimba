@@ -8,15 +8,14 @@ export default function Answer(props) {
 
     function determineColor() {
         if (props.checkCorrect) {
+            // Correct answer
             if (props.isCorrect) {
-                if (props.isSelected) {
-                    return "#00FF00" // green
-                } else {
-                    return "#FF0000" //red
-                }
+                return "#94D7A2";
             }
+
+            // Selected but not correct
             if (props.isSelected) {
-                return "#FF0000" //red
+                return "#F8BCBC";
             }
         } else {
             return props.isSelected ? "#D6DBF5" : "#FFFFFF"
