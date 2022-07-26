@@ -8,6 +8,10 @@ import { nanoid } from "nanoid";
 //          maybe just generate a new component to show the user which ones they missed
 export default function Quiz(props) {
     
+    // TODO: remove
+    // DEBUG mode flag
+    const DEBUG = false;
+
     const [questions, setQuestions] = React.useState([
         {
             id: "",
@@ -114,9 +118,6 @@ export default function Quiz(props) {
         setResetQuestions(true);
     }
 
-    // DEBUG: use this for testing to see the correct answers before submission
-    // console.log(questions);
-
     const questionElems = questions.map((question, index) => (
         <Question 
             key={question.id}
@@ -128,12 +129,18 @@ export default function Quiz(props) {
         />
     ))
 
+    // TODO: remove
+    const debugCorrectElems = questions.map(question => {
+        return <p>{question.correctAnswerIndex}</p>
+    })
+
      // Note: I added the second "userWon &&" line to force a re-render after the useEffect that sets userWon
      // Otherwise, the Confetti won't render
     return (
         <div className="quiz">
             {userWon && <Confetti />}
-            {<h1>{userWon ? "You've won!" : "Quizzical"}</h1>}
+            {<h1>{userWon ? "You've won!" : "Quizzical"}</h1>} 
+            {DEBUG && <span>{debugCorrectElems}</span>}
             <div className="questions">
                 {questionElems}
             </div>
