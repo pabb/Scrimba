@@ -11,13 +11,20 @@ export default function Quiz(props) {
         {
             id: "gjgjgjgjg",
             answers: ["test", "test"],
-            // correctAnswerId: "abcde",
-            // incorrectAnswers: ["No", "Maybe"],
             correctAnswerIndex: 0,
             question: "Is this a test?",
             isBoolean: false
         }
     ]);
+
+    // Set to indicate when the user is checking their answers
+    const [checkingAnswers, setCheckingAnswers] = React.useState(false);
+
+    // Set to indicate when we're done gathering answer results 
+    const [doneChecking, setDoneChecking] = React.useState(false);
+
+    // When checkingAnswers is set, represent whether each question was correctly selected
+    const [answerCorrect, setAnswerCorrect] = React.useState([false, false, false, false, false]);
 
     // Query API for questions on first component load
     React.useEffect(() => {
@@ -33,6 +40,20 @@ export default function Quiz(props) {
         }
         getQuestions();
     }, [])
+ 
+     // TODO: check when transitioning checkAnswers -> false to reset Quiz. Might require new state variable.
+     // When done checking, report whether the player has won
+    React.useEffect(() => {
+        if (doneChecking) {
+            console.log("Number correct: " + answerCorrect.filter(x => x === true).length + " / " + answerCorrect.length);
+            console.log("All correct: " + answerCorrect.every(x => x === true));
+        }
+        // if (checkingAnswers && !doneChecking) {
+        //     // reset quiz
+        // }
+
+        // Report if each choice was correct; can do Confetti or return the number of correct questions
+    }, [doneChecking])
 
     function assignQuestions(rawQuestions) {
         const modifiedQuestions = []
@@ -40,10 +61,8 @@ export default function Quiz(props) {
             const currentQuestion = rawQuestions[i]
             let answersArr = currentQuestion.incorrect_answers.slice()
             let numAnswers = 1 + currentQuestion.incorrect_answers.length // 1 true answer + 1-3 incorrect answers 
-            let correctIndex = Math.ceil(Math.random() * numAnswers)
+            let correctIndex = Math.floor(Math.random() * numAnswers)
             answersArr.splice(correctIndex, 0, currentQuestion.correct_answer)
-
-            // Splice correct Answer to correctIndex
             modifiedQuestions.push({
                 id: nanoid(),
                 answers: answersArr,
@@ -56,13 +75,45 @@ export default function Quiz(props) {
         setQuestions(modifiedQuestions);
     }
 
-    function checkAnswers() {
-        
+    function setAnswerState(questionIndex, isCorrect) {
+        setAnswerCorrect(prevAnswers => {
+            let answers = []
+            for (let i = 0; i < prevAnswers.length; i++) {
+                if (i === questionIndex) {
+                    answers[i] = isCorrect;
+                } else {
+                    answers[i] = prevAnswers[i]
+                }
+            }
+
+            console.log("setAnswerState - questionIndex + " + questionIndex + " isCorrect: " + isCorrect);
+            return answers;
+        })
+
+        setDoneChecking(true);
     }
 
-    // TODO: make sure only renders ONCE
-    const questionElems = questions.map(question => (
-        <Question key={question.id} questionBlob={question} correctIndex={question.correctAnswerIndex} />
+    function checkAnswers() {
+        setCheckingAnswers(true);
+    }
+
+    function resetQuiz() {
+        setCheckingAnswers(false);
+
+        // Trigger new API call with useEffect, or re-render
+    }
+
+    console.log("setAnswerState: " + answerCorrect);
+
+    const questionElems = questions.map((question, index) => (
+        <Question 
+            key={question.id}
+            index={index}
+            questionBlob={question}
+            correctIndex={question.correctAnswerIndex}
+            checkCorrect={checkingAnswers}
+            setCorrect={setAnswerState}
+        />
     ))
 
     return (
@@ -72,9 +123,9 @@ export default function Quiz(props) {
             </div>
             <button 
                 className="quiz--button" 
-                onClick={checkAnswers}
+                onClick={checkingAnswers ? resetQuiz : checkAnswers}
             >
-                Check Answers
+                {checkingAnswers ? "Reset Quiz" : "Check Answers"}
             </button>
         </div>
     )

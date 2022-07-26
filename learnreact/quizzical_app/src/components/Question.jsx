@@ -4,22 +4,27 @@ import { decode } from "he";
 
 export default function Question(props) {
 
-    const [correctIndex, setCorrectIndex] = React.useState(props.correctIndex);
     const [selectedAnswerIndex, setSelectedAnswerIndex] = React.useState(-1); // Don't select anything on page load
 
     function selectAnswer(index) {
         setSelectedAnswerIndex(index);
-        // console.log("Index param: " + index + " / Selected: " + selectedAnswerIndex)
     }
+
+    React.useEffect(() => {
+        if (props.checkCorrect) {
+            console.log("selectedAnswerIndex: " + selectedAnswerIndex + " / correctIndex: " + props.correctIndex)
+            props.setCorrect(props.index, selectedAnswerIndex === props.correctIndex);
+        }
+    }, [props.checkCorrect])
 
     const answerElems = props.questionBlob.answers.map((answer, index) => {
         const decodedAnswer = decode(answer)
         return <Answer 
                     key={`decodedAnswer + ${index}`}
-                    index={index}
-                    questionId={props.questionBlob.id}
                     answer={decodedAnswer}
                     isSelected={selectedAnswerIndex === index}
+                    isCorrect={props.correctIndex === index}
+                    checkCorrect={props.checkCorrect}
                     handleClick={() => selectAnswer(index)}
                 /> 
     })
