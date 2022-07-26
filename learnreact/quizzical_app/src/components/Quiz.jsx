@@ -114,7 +114,7 @@ export default function Quiz(props) {
         setResetQuestions(true);
     }
 
-    // DEBUG: use this to check the correct answer indices to test win condition
+    // DEBUG: use this for testing to see the correct answers before submission
     // console.log(questions);
 
     const questionElems = questions.map((question, index) => (

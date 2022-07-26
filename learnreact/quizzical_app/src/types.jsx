@@ -25,7 +25,7 @@ const types = {
         type: "" // multiple | boolean, or null (All)
     },
 
-    API_URL: "https://opentdb.com/api.php?amount=5&category=15" // type=multiple | boolean
+    API_URL: "https://opentdb.com/api.php?amount=5"
 }
 
 export default types;
