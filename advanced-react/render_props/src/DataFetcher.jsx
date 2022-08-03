@@ -1,4 +1,4 @@
-import React, {Component} from "react"
+import {Component} from "react"
 
 class DataFetcher extends Component {
     state = {
@@ -11,9 +11,10 @@ class DataFetcher extends Component {
     componentDidMount() {
         this.setState({loading: true})
         fetch(this.props.url)
-            .then(res => {
+            .then(async res => {
                 if (!res.ok) {
-                    return res.text().then(text => { throw new Error(text) })
+                    const text = await res.text()
+                    throw new Error(text)
                 }
                 return res.json()
             })
